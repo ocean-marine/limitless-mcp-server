@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "limitless": {
+      "command": "npx",
+      "args": ["-y", "limitless-mcp-server"],
+      "env": {
+        "LIMITLESS_API_KEY": "${{ secrets.LIMITLESS_API_KEY }}"
+      }
+    }
+  }
+}

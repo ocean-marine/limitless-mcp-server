@@ -1,0 +1,76 @@
+name: Claude TODO Assistant
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  issues:
+    types: [opened, assigned]
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  claude-code-action:
+    if: |
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude')) ||
+      (github.event_name == 'issues' && contains(github.event.issue.body, '@claude'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+      issues: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Install TypeScript limitless-mcp-server
+        run: |
+          npm install -g limitless-mcp-server
+
+      - name: Run Claude PR Action
+        uses: anthropics/claude-code-action@beta
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          timeout_minutes: "60"
+          mcp_config: |
+            {
+                "mcpServers": {
+                    "todoist": {
+                        "command": "npx",
+                        "args": [
+                            "-y",
+                            "@abhiz123/todoist-mcp-server"
+                        ],
+                        "env": {
+                            "TODOIST_API_TOKEN": "${{ secrets.TODOIST_API_TOKEN }}"
+                        }
+                    },
+                    "limitless": {
+                        "command": "npx",
+                        "args": [
+                            "-y",
+                            "limitless-mcp-server"
+                        ],
+                        "env": {
+                            "LIMITLESS_API_KEY": "${{ secrets.LIMITLESS_API_KEY }}"
+                        }
+                    }
+                }
+            }
+          allowed_tools: |
+            mcp__limitless__limitless_get_lifelog_by_id,
+            mcp__limitless__limitless_list_lifelogs_by_date,
+            mcp__limitless__limitless_list_lifelogs_by_range,
+            mcp__limitless__limitless_list_recent_lifelogs,
+            mcp__limitless__limitless_search_lifelogs,
+            mcp__todoist__todoist_get_tasks,
+            mcp__todoist__todoist_create_task,
+            mcp__todoist__todoist_update_task,
+            mcp__todoist__todoist_complete_task,
+            mcp__todoist__todoist_delete_task
