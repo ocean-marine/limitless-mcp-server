@@ -1,10 +1,18 @@
+import httpx
+from mcp.server.fastmcp import FastMCP
 import requests
 import yaml
 
 from .converter import convert_boolean_to_string, convert_json_to_markdown
 from .validator import LIMITLESS_API_KEY
 
+# Initialize FastMCP server
+mcp = FastMCP(
+    name="limitless",
+    instructions="Limitless APIを使用してlifelogsを取得し、Markdown形式で出力します。",
+)
 
+@mcp.tool()
 def get_lifelogs(
     date: str | None = None,
     start: str | None = None,
@@ -77,4 +85,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    mcp.run()

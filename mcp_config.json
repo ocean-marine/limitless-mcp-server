@@ -1,0 +1,18 @@
+{
+    "mcpServers": {
+        "limitless": {
+            "command": "uvx",
+            "args": [
+                "--directory",
+                "${{ github.workspace }}/limitless-mcp-server",
+                "run",
+                "python",
+                "-m",
+                "src"
+            ],
+            "env": {
+                "LIMITLESS_API_KEY": "YOUR_API_KEY"
+            }
+        }
+    }
+}
