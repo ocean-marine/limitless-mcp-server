@@ -11,7 +11,7 @@
                 "src"
             ],
             "env": {
-                "LIMITLESS_API_KEY": "YOUR_API_KEY"
+                "LIMITLESS_API_KEY": "${{ secrets.LIMITLESS_API_KEY }}"
             }
         }
     }
