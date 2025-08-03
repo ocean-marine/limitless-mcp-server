@@ -1,0 +1,23 @@
+version: "3"
+tasks:
+  check:
+    desc: Run pre-commit checks
+    cmds:
+      - uv tool run ruff@0.3.1 check . --fix
+      - uv tool run ruff@0.3.1 format .
+      - uv tool run mypy@1.8.0 . --strict
+
+  run:
+    desc: Run the application
+    cmds:
+      - uv run -m src.my_project
+
+  test:
+    desc: Run tests
+    cmds:
+      - uv run pytest
+
+  up:
+    desc: Run docker compose up
+    cmds:
+      - docker compose up --build
