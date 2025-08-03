@@ -1,2 +1,1 @@
-# python-template
-Template repository of Python project
+# Limitless MCP Server
